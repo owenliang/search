@@ -6,7 +6,7 @@ option java_package = "top.jdk8.search.protobuf";
 
 option java_outer_classname = "SearchProto";
 
-// 正排文档
+// 正排
 message TermInfo {
     string term = 1;
     int32 offset = 2;
