@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package top.jdk8.search.protobuf;
+
+option java_package = "top.jdk8.search.protobuf";
+
+option java_outer_classname = "SearchProto";
+
+// 正排文档
+message TermInfo {
+    string term = 1;
+    int32 offset = 2;
+    int32 length = 3;
+}
+message Document {
+    string content = 1; // 正文
+    repeated TermInfo terms = 2; // 分词
+}
+
+// 倒排
+message PostingItem {
+    int64 doc_id = 1;
+    int32 tf = 2;   // TF=当前doc中该term次数/当前doc中term总数
+}
+message PostingList {
+    repeated PostingItem items = 1;
+}
