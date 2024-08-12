@@ -9,6 +9,9 @@ public class DocumentHandle {
 
     public static DocumentHandle loadFromDB(IndexDB indexDB, String docId) throws Exception {
         SearchProto.Document document = indexDB.getDocument(docId);
+        if(document == null) {
+            return null;
+        }
         return new DocumentHandle(indexDB,docId,document);
     }
 
@@ -16,5 +19,9 @@ public class DocumentHandle {
         this.indexDB = indexDB;
         this.docId = docId;
         this.document = document;
+    }
+
+    public void flush() throws Exception {
+        indexDB.addDocument(docId,document);
     }
 }

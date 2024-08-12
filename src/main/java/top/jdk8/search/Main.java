@@ -1,31 +1,16 @@
 package top.jdk8.search;
 
-import top.jdk8.search.protobuf.SearchProto;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
-
 public class Main {
     public static void main(String[] args) throws Exception {
+        // 索引库
         String dbpath=args[0];
-        IndexDB db = new IndexDB(dbpath);
+        IndexDB indexDB = new IndexDB(dbpath);
 
-        ////////// 写入
-        SearchProto.Document.Builder docBuilder = SearchProto.Document.newBuilder();
-        docBuilder.setContent("hello world");
-
-        SearchProto.TermInfo.Builder termInfoBuilder = SearchProto.TermInfo.newBuilder();
-        termInfoBuilder.setTerm("你好").setOffset(5).setLength(2);
-        docBuilder.addTerms((termInfoBuilder.build()));
-        SearchProto.Document document=docBuilder.build();
-
-        db.addDocument("1",document);
-
-        ////////// 查询
-        SearchProto.Document doc = db.getDocument("1");
-        System.out.println(doc);
-
-        ///////// 倒排表（doc_id -> PostingItem）
+        // 构建索引
+        InvertedIndexBuilder invertedIndexBuilder = new InvertedIndexBuilder(indexDB);
+        invertedIndexBuilder.addDocument("1","这是一个伸手不见五指的黑夜。我叫孙悟空，我爱北京，我爱Python和C++。");
+        invertedIndexBuilder.addDocument("2","工信处女干事每月经过下属科室都要亲口交代24口交换机等技术性器件的安装工作");
+        invertedIndexBuilder.addDocument("3","黑夜很黑");
+        invertedIndexBuilder.flush();
     }
 }

@@ -1,13 +1,14 @@
 package top.jdk8.search;
 
 import top.jdk8.search.protobuf.SearchProto;
+
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class PostingListHandle {
     private IndexDB indexDB;
     private String term;
     // doc_id -> posting_item
-    private ConcurrentSkipListMap<Long, SearchProto.PostingItem> postingList = new ConcurrentSkipListMap<>();
+    private ConcurrentSkipListMap<String, SearchProto.PostingItem> postingList = new ConcurrentSkipListMap<>();
 
     public static PostingListHandle loadFromDB(IndexDB indexDB, String term) throws Exception {
         SearchProto.PostingList postingList = indexDB.getPostingList(term);
@@ -33,14 +34,15 @@ public class PostingListHandle {
         this.postingList.put(postingItem.getDocId(),postingItem);
     }
 
-    public void flushUpdateToDB() {
+    public void flush() throws Exception {
         // 从DB读取已有的拉链
         SearchProto.PostingList curPostingList = indexDB.getPostingList(term);
-
-        // 存量+增量merge到一起
-        for(int i=0;i<curPostingList.getItemsCount();++i) {
-            SearchProto.PostingItem postingItem = curPostingList.getItems(i);
-            this.postingList.put(postingItem.getDocId(),postingItem);
+        if (curPostingList!=null) {
+            // 存量+增量merge到一起
+            for(int i=0;i<curPostingList.getItemsCount();++i) {
+                SearchProto.PostingItem postingItem = curPostingList.getItems(i);
+                this.postingList.put(postingItem.getDocId(),postingItem);
+            }
         }
 
         // 生成dump数据
