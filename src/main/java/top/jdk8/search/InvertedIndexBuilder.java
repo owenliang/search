@@ -77,5 +77,6 @@ public class InvertedIndexBuilder {
             PostingListHandle postingListHandle = pair.getValue();
             postingListHandle.flush();
         }
+        buildBuffer.clear();
     }
 }
