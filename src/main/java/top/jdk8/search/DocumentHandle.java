@@ -9,10 +9,10 @@ public class DocumentHandle {
 
     public static DocumentHandle loadFromDB(IndexDB indexDB, String docId) throws Exception {
         SearchProto.Document document = indexDB.getDocument(docId);
-        if(document == null) {
+        if (document == null) {
             return null;
         }
-        return new DocumentHandle(indexDB,docId,document);
+        return new DocumentHandle(indexDB, docId, document);
     }
 
     public DocumentHandle(IndexDB indexDB, String docId, SearchProto.Document document) {
@@ -22,6 +22,6 @@ public class DocumentHandle {
     }
 
     public void flush() throws Exception {
-        indexDB.addDocument(docId,document);
+        indexDB.addDocument(docId, document);
     }
 }

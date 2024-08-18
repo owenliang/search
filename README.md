@@ -1,12 +1,13 @@
-package top.jdk8.search;
+# 倒排索引
 
-import org.junit.jupiter.api.Test;
+简单的倒排索引原理示例。
 
-import java.util.List;
+* 离线构造倒排索引，jieba分词，snappy压缩，protobuf序列化，持久化到rocksdb
+* 在线召回倒排链表，tf*idf计算文档匹配度
 
-public class TestMain {
-    // 写一个单测示例
+## 离线构建索引
 
+```
     @Test
     public void testBuilder() throws Exception {
         // 索引库
@@ -19,8 +20,13 @@ public class TestMain {
         invertedIndexBuilder.addDocument("3", "黑夜很黑");
         invertedIndexBuilder.flush();
     }
+```
 
-    @Test
+这里索引3篇文档，基于rocksdb持久化到磁盘。
+
+## 在线检索
+
+```
     public void testSearcher() throws Exception {
         IndexDB indexDB = new IndexDB("./test.db");
 
@@ -29,4 +35,12 @@ public class TestMain {
 
         System.out.println(scoredDocs);
     }
-}
+```
+
+返回topN打分文档，以及term命中信息:
+```
+[
+ScoredDoc{docId='1', score=0.17111531, termHits=[TermHit{term='黑夜', tf=0.041666668}, TermHit{term='我', tf=0.125}, TermHit{term='的', tf=0.041666668}]}, 
+ScoredDoc{docId='3', score=0.13515504, termHits=[TermHit{term='黑夜', tf=0.33333334}]}
+]
+```
