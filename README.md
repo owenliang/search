@@ -44,3 +44,7 @@ ScoredDoc{docId='1', score=0.17111531, termHits=[TermHit{term='黑夜', tf=0.041
 ScoredDoc{docId='3', score=0.13515504, termHits=[TermHit{term='黑夜', tf=0.33333334}]}
 ]
 ```
+
+## 参考书籍
+
+《自制搜索引擎》
